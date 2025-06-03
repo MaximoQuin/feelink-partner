@@ -6,6 +6,7 @@ export default function Layout() {
       <Tabs.Screen name="index" options={{ title: 'Inicio' }} />
       <Tabs.Screen name="diario" options={{ title: 'Diario' }} />
       <Tabs.Screen name="habitos" options={{ title: 'Hábitos' }} />
+      <Tabs.Screen name="grafica" options={{ title: 'Gráfica' }} />
     </Tabs>
   );
 }

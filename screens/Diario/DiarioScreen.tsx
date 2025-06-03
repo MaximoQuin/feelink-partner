@@ -1,7 +1,7 @@
 // screens/Diario/DiarioScreen.tsx
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import { useNavigation } from "expo-router";
+import { useNavigation, router } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
@@ -211,10 +211,10 @@ export default function DiarioScreen() {
                     style={[styles.addButton, { flex: 1 }]}
                     onPress={() => {
                       cerrarModal();
-                      navigation.navigate({
-                        pathname: "diario/EditarEntrada",
-                        params: { id: registroSeleccionado.id },
-                      } as never);
+                      router.push(
+                        `/diario/EditarEntrada?id=${registroSeleccionado.id}`
+                      );
+                  
                     }}
                   >
                     <Text style={{ color: 'black', fontWeight: 'bold' }}>

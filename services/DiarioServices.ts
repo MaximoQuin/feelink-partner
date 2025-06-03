@@ -77,6 +77,14 @@ export async function addRegistro(
   await AsyncStorage.setItem(REGISTROS_KEY, JSON.stringify(registros));
 }
 
+export async function updateRegistro(updated: RegistroDiario): Promise<void> {
+  const registros = await getRegistros();
+  const actualizados = registros.map((r) =>
+    r.id === updated.id ? updated : r
+  );
+  await AsyncStorage.setItem(REGISTROS_KEY, JSON.stringify(actualizados));
+}
+
 
 export async function deleteRegistro(id: string): Promise<void> {
   const registros = await getRegistros();

@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Alert
 } from "react-native";
 import { useNavigation } from "expo-router";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -15,7 +16,6 @@ import {
   Actividad,
 } from "../../models/DiarioTypes";
 import { getActividades, addRegistro } from "../../services/DiarioServices";
-import { Alert } from "react-native";
 
 const emociones: { estado: EstadoAnimo; icon: string }[] = [
   { estado: "increible", icon: "face-laugh-beam" },
@@ -102,7 +102,7 @@ export default function NuevaEntradaScreen() {
         </View>
       </View>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("GestorActividades" as never)}>
         <Text style={styles.link}>+ Gestor de actividades...</Text>
       </TouchableOpacity>
 

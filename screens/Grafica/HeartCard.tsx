@@ -1,5 +1,5 @@
-import { View, Text } from 'react-native';
-import styles from '../../styles/graficaStyles';
+import { Text, View } from 'react-native';
+import styles from './GraficaStyle';
 
 export default function HeartCard() {
   return (

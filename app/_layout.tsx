@@ -30,7 +30,14 @@ export default function Layout() {
         name="habitos" 
         options={{ 
           title: 'Hábitos',
-          tabBarIcon: ({ color }) => <MaterialIcons name="check-circle" size={24} color={color} />,
+          tabBarIcon: ({ color }) => <MaterialIcons name="edit-note" size={24} color={color} />,
+        }} 
+      />
+      <Tabs.Screen 
+        name="grafica" 
+        options={{ 
+          title: 'Graficas',
+          tabBarIcon: ({ color }) => <MaterialIcons name="bar-chart" size={24} color={color} />,
         }} 
       />
     </Tabs>

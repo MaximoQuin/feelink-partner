@@ -1,4 +1,5 @@
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Link, useRouter } from 'expo-router'
 import React from 'react';
 import {
     ScrollView,
@@ -7,30 +8,42 @@ import {
     View,
 } from 'react-native';
 import styles from "./HabitosStyle";
+import {habits, days} from '@/app/data';
 
-const habits = [
-    { title: 'Cepillarse los dientes', time: '06:30 am' },
-    { title: 'Hacer tarea', time: '10:00 am' },
-    { title: 'Comer fruta', time: '11:00 am' },
-    { title: 'Tomar agua', time: '12:00 pm' },
-    { title: 'Descansar', time: '04:00 pm' },
-    { title: 'Cepillarse los dientes', time: '06:30 am' },
-    { title: 'Hacer tarea', time: '10:00 am' },
-    { title: 'Comer fruta', time: '11:00 am' },
-    { title: 'Tomar agua', time: '12:00 pm' },
-    { title: 'Descansar', time: '04:00 pm' },
-];
+const router = useRouter();
 
-const days = [
-    'Diariamente',
-    'Lunes',
-    'Martes',
-    'Miércoles',
-    'Jueves',
-    'Viernes',
-    'Sábado',
-    'Domingo',
-];
+  const handleViewHabit = (id: string) => {
+        router.push({
+            pathname: `/habitos/[id]`, 
+            params: { id: id } 
+        });
+    };
+
+
+
+// const habits = [
+//     { title: 'Cepillarse los dientes', time: '06:30 am' },
+//     { title: 'Hacer tarea', time: '10:00 am' },
+//     { title: 'Comer fruta', time: '11:00 am' },
+//     { title: 'Tomar agua', time: '12:00 pm' },
+//     { title: 'Descansar', time: '04:00 pm' },
+//     { title: 'Cepillarse los dientes', time: '06:30 am' },
+//     { title: 'Hacer tarea', time: '10:00 am' },
+//     { title: 'Comer fruta', time: '11:00 am' },
+//     { title: 'Tomar agua', time: '12:00 pm' },
+//     { title: 'Descansar', time: '04:00 pm' },
+// ];
+
+// const days = [
+//     'Diariamente',
+//     'Lunes',
+//     'Martes',
+//     'Miércoles',
+//     'Jueves',
+//     'Viernes',
+//     'Sábado',
+//     'Domingo',
+// ];
 
 const HabitScreen = () => {
     return (
@@ -75,7 +88,12 @@ const HabitScreen = () => {
                             <MaterialCommunityIcons name="emoticon-happy-outline" size={24} color="#3730A3" />
                             <Text style={styles.habitTitle}>{habit.title}</Text>
                             <Text style={styles.habitTime}>{habit.time}</Text>
-                            <Feather name="eye" size={20} color="#9FA6FF" style={styles.icon} />
+                             <TouchableOpacity
+                                onPress={() => handleViewHabit(habit.id.toString())} // Asegúrate de que habit.id sea string
+                                style={styles.icon}
+                            >
+                                <Feather name="eye" size={20} color="#9FA6FF" />
+                            </TouchableOpacity>
                             <Feather name="edit-3" size={20} color="#9FA6FF" style={styles.icon} />
                             <Feather name="trash-2" size={20} color="#9FA6FF" />
                         </View>

@@ -5,14 +5,15 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Alert
+  Alert,
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import { useNavigation } from "expo-router";
 import { FontAwesome6 } from "@expo/vector-icons";
 import styles from "./NuevaEntradaStyles";
 import {
   EstadoAnimo,
-  RegistroDiario,
   Actividad,
 } from "../../models/DiarioTypes";
 import { getActividades, addRegistro } from "../../services/DiarioServices";
@@ -66,6 +67,11 @@ export default function NuevaEntradaScreen() {
   };
 
   return (
+    <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={100}
+        >
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Nueva entrada</Text>
@@ -123,5 +129,6 @@ export default function NuevaEntradaScreen() {
         <Text style={styles.botonText}>Guardar entrada</Text>
       </TouchableOpacity>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

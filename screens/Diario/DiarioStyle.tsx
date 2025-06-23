@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#374151",
     lineHeight: 20,
+    margin: 15,
   },
 });
 

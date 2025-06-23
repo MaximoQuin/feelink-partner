@@ -1,4 +1,3 @@
-// screens/Diario/DiarioScreen.tsx
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation, router } from "expo-router";

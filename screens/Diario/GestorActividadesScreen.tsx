@@ -7,6 +7,8 @@ import {
   TextInput,
   Alert,
   Modal,
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import styles from "./GestorActividadesStyle";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -89,78 +91,86 @@ export default function GestorActividadesScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Hábitos</Text>
-      </View>
-
-      <FlatList
-        data={actividades}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.cardText}>{item.nombre}</Text>
-            {item.personalizada && (
-              <View style={styles.cardActions}>
-                <TouchableOpacity onPress={() => abrirModalEditar(item)}>
-                  <FontAwesome6 name="pencil" size={18} color="#6B7280" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleEliminar(item.id)}>
-                  <FontAwesome6 name="x" size={20} color="red" />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-        )}
-      />
-
-      <View style={styles.inputContainer}>
-        <TextInput
-          value={nuevaActividad}
-          onChangeText={setNuevaActividad}
-          style={styles.inputActividad}
-          placeholder="Nuevo hábito..."
-        />
-        <TouchableOpacity onPress={handleAgregar} style={styles.addButton}>
-          <FontAwesome6 name="plus" size={16} color="white" />
-        </TouchableOpacity>
-      </View>
-
-      <Modal
-        visible={modalVisible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.headerModalText}>Editar actividad</Text>
-            <TextInput
-              style={styles.inputModal}
-              value={editNombre}
-              onChangeText={setEditNombre}
-              placeholder="Nuevo nombre"
-            />
-            <TouchableOpacity style={styles.addButton} onPress={guardarEdicion}>
-              <Text style={{ color: "white", fontWeight: "bold" }}>
-                Guardar
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.addButton,
-                { backgroundColor: "#6B7280", marginTop: 10 },
-              ]}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={{ color: "white", fontWeight: "bold" }}>
-                Cancelar
-              </Text>
-            </TouchableOpacity>
-          </View>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={100}
+    >
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Hábitos</Text>
         </View>
-      </Modal>
-    </View>
+
+        <FlatList
+          data={actividades}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContainer}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <Text style={styles.cardText}>{item.nombre}</Text>
+              {item.personalizada && (
+                <View style={styles.cardActions}>
+                  <TouchableOpacity onPress={() => abrirModalEditar(item)}>
+                    <FontAwesome6 name="pencil" size={18} color="#6B7280" />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleEliminar(item.id)}>
+                    <FontAwesome6 name="x" size={20} color="red" />
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          )}
+        />
+
+        <View style={styles.inputContainer}>
+          <TextInput
+            value={nuevaActividad}
+            onChangeText={setNuevaActividad}
+            style={styles.inputActividad}
+            placeholder="Nuevo hábito..."
+          />
+          <TouchableOpacity onPress={handleAgregar} style={styles.addButton}>
+            <FontAwesome6 name="plus" size={16} color="white" />
+          </TouchableOpacity>
+        </View>
+
+        <Modal
+          visible={modalVisible}
+          transparent={true}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.headerModalText}>Editar actividad</Text>
+              <TextInput
+                style={styles.inputModal}
+                value={editNombre}
+                onChangeText={setEditNombre}
+                placeholder="Nuevo nombre"
+              />
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={guardarEdicion}
+              >
+                <Text style={{ color: "white", fontWeight: "bold" }}>
+                  Guardar
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.addButton,
+                  { backgroundColor: "#6B7280", marginTop: 10 },
+                ]}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={{ color: "white", fontWeight: "bold" }}>
+                  Cancelar
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    </KeyboardAvoidingView>
   );
 }

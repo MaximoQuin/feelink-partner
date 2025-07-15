@@ -1,4 +1,3 @@
-// screens/Diario/GestorActividadesStyles.tsx
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({

@@ -4,7 +4,7 @@ const graficaStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingTop: 16,
+    paddingTop: 50,
   },
   header: {
     flexDirection: "row",

@@ -1,4 +1,3 @@
-// src/screens/HabitsScreen.tsx
 import { db } from "@/firebaseConfig";
 import {
   addDoc,
@@ -26,12 +25,12 @@ const HabitsScreen = () => {
   const [habitos, setHabitos] = useState<any[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [nuevoNombre, setNuevoNombre] = useState("");
-  const [diaSemana, setDiaSemana] = useState<string | undefined>(undefined);
+  const [diasSemana, setDiasSemana] = useState<string[]>([]);
   const [hora, setHora] = useState<Date | null>(null);
   const [editando, setEditando] = useState<{
     id: string;
     nombre: string;
-    diaSemana?: string;
+    diasSemana?: string[];
     hora?: any;
   } | null>(null);
 
@@ -49,10 +48,14 @@ const HabitsScreen = () => {
 
   const agregarHabito = async () => {
     if (nuevoNombre.trim() === "") return;
+    if (diasSemana.length === 0) {
+      Alert.alert("Selecciona al menos un día de la semana");
+      return;
+    }
 
     await addDoc(collection(db, "habitos"), {
       nombre: nuevoNombre.trim(),
-      diaSemana: diaSemana || null,
+      diasSemana,
       hora: hora ? hora.toISOString() : null,
     });
 
@@ -61,10 +64,14 @@ const HabitsScreen = () => {
 
   const guardarEdicion = async () => {
     if (editando && nuevoNombre.trim() !== "") {
+      if (diasSemana.length === 0) {
+        Alert.alert("Selecciona al menos un día de la semana");
+        return;
+      }
       const ref = doc(db, "habitos", editando.id);
       await updateDoc(ref, {
         nombre: nuevoNombre.trim(),
-        diaSemana: diaSemana || null,
+        diasSemana,
         hora: hora ? hora.toISOString() : null,
       });
       cerrarModal();
@@ -103,18 +110,18 @@ const HabitsScreen = () => {
   const abrirModal = (habit?: {
     id: string;
     nombre: string;
-    diaSemana?: string;
+    diasSemana?: string[];
     hora?: string;
   }) => {
     if (habit) {
       setEditando(habit);
       setNuevoNombre(habit.nombre);
-      setDiaSemana(habit.diaSemana);
+      setDiasSemana(habit.diasSemana || []);
       setHora(habit.hora ? new Date(habit.hora) : null);
     } else {
       setEditando(null);
       setNuevoNombre("");
-      setDiaSemana(undefined);
+      setDiasSemana([]);
       setHora(null);
     }
     setModalVisible(true);
@@ -124,14 +131,15 @@ const HabitsScreen = () => {
     setModalVisible(false);
     setNuevoNombre("");
     setEditando(null);
-    setDiaSemana(undefined);
+    setDiasSemana([]);
     setHora(null);
   };
 
-  // Función para mostrar el día de la semana con mayúscula inicial
-  const formatDiaSemana = (dia?: string) => {
-    if (!dia) return "";
-    return dia.charAt(0).toUpperCase() + dia.slice(1);
+  const formatDiasSemana = (dias?: string[]) => {
+    if (!dias || dias.length === 0) return "";
+    return dias
+      .map((d) => d.charAt(0).toUpperCase() + d.slice(1))
+      .join(", ");
   };
 
   const formatTime = (dateString?: string) => {
@@ -151,11 +159,9 @@ const HabitsScreen = () => {
           <View style={styles.item}>
             <View>
               <Text style={styles.nombre}>{item.nombre}</Text>
-              {(item.diaSemana || item.hora) && (
+              {(item.diasSemana?.length || item.hora) && (
                 <Text style={{ fontSize: 12, color: "#666" }}>
-                  {item.diaSemana
-                    ? `Día: ${formatDiaSemana(item.diaSemana)} `
-                    : ""}
+                  {item.diasSemana ? `Días: ${formatDiasSemana(item.diasSemana)} ` : ""}
                   {item.hora ? `Hora: ${formatTime(item.hora)}` : ""}
                 </Text>
               )}
@@ -164,9 +170,7 @@ const HabitsScreen = () => {
               <TouchableOpacity onPress={() => abrirModal(item)}>
                 <Icon name="edit" size={22} color="#1e90ff" />
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => confirmarEliminarHabito(item.id)}
-              >
+              <TouchableOpacity onPress={() => confirmarEliminarHabito(item.id)}>
                 <Icon name="delete" size={22} color="#ff3333" />
               </TouchableOpacity>
             </View>
@@ -174,10 +178,7 @@ const HabitsScreen = () => {
         )}
       />
 
-      <TouchableOpacity
-        style={styles.botonAgregar}
-        onPress={() => abrirModal()}
-      >
+      <TouchableOpacity style={styles.botonAgregar} onPress={() => abrirModal()}>
         <Feather name="plus" size={28} color="#fff" />
       </TouchableOpacity>
 
@@ -188,8 +189,8 @@ const HabitsScreen = () => {
         onChange={setNuevoNombre}
         onSave={editando ? guardarEdicion : agregarHabito}
         editing={!!editando}
-        diaSemana={diaSemana}
-        onChangeDiaSemana={setDiaSemana}
+        diasSemana={diasSemana}
+        onChangeDiasSemana={setDiasSemana}
         hora={hora}
         onChangeHora={setHora}
       />
@@ -237,9 +238,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,
-  },
-  textoBoton: {
-    fontSize: 30,
-    color: "#fff",
   },
 });

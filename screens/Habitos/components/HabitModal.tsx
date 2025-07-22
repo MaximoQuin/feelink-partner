@@ -1,7 +1,5 @@
-import { Picker } from "@react-native-picker/picker"; // npm install @react-native-picker/picker
 import React, { useState } from "react";
 import {
-  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -19,20 +17,21 @@ type Props = {
   onSave: () => void;
   editing?: boolean;
 
-  diaSemana?: string;
-  onChangeDiaSemana?: (dia: string) => void;
+  diasSemana?: string[]; // Array de días seleccionados
+  onChangeDiasSemana?: (dias: string[]) => void;
+
   hora?: Date | null;
   onChangeHora?: (date: Date) => void;
 };
 
-const diasSemana = [
-  { label: "Lunes", value: "lunes" },
-  { label: "Martes", value: "martes" },
-  { label: "Miércoles", value: "miercoles" },
-  { label: "Jueves", value: "jueves" },
-  { label: "Viernes", value: "viernes" },
-  { label: "Sábado", value: "sabado" },
-  { label: "Domingo", value: "domingo" },
+const diasDisponibles = [
+  "lunes",
+  "martes",
+  "miércoles",
+  "jueves",
+  "viernes",
+  "sábado",
+  "domingo",
 ];
 
 const HabitModal = ({
@@ -42,12 +41,22 @@ const HabitModal = ({
   onChange,
   onSave,
   editing = false,
-  diaSemana,
-  onChangeDiaSemana,
+  diasSemana = [],
+  onChangeDiasSemana,
   hora,
   onChangeHora,
 }: Props) => {
   const [showTimePicker, setShowTimePicker] = useState(false);
+
+  // Alterna selección de un día
+  const toggleDia = (dia: string) => {
+    if (!onChangeDiasSemana) return;
+    if (diasSemana.includes(dia)) {
+      onChangeDiasSemana(diasSemana.filter((d) => d !== dia));
+    } else {
+      onChangeDiasSemana([...diasSemana, dia]);
+    }
+  };
 
   const onConfirmTime = (date: Date) => {
     setShowTimePicker(false);
@@ -80,24 +89,33 @@ const HabitModal = ({
           style={styles.input}
         />
 
-        {/* Selector Día de la semana */}
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={diaSemana}
-            onValueChange={(itemValue: any) =>
-              onChangeDiaSemana && onChangeDiaSemana(itemValue)
-            }
-            mode="dropdown"
-            style={styles.picker}
-          >
-            {diasSemana.map((dia) => (
-              <Picker.Item
-                key={dia.value}
-                label={dia.label}
-                value={dia.value}
-              />
-            ))}
-          </Picker>
+        <Text style={{ marginBottom: 8, fontWeight: "bold" }}>
+          Selecciona días de la semana:
+        </Text>
+
+        <View style={styles.diasContainer}>
+          {diasDisponibles.map((dia) => {
+            const seleccionado = diasSemana.includes(dia);
+            return (
+              <TouchableOpacity
+                key={dia}
+                style={[
+                  styles.diaBoton,
+                  seleccionado && styles.diaSeleccionado,
+                ]}
+                onPress={() => toggleDia(dia)}
+              >
+                <Text
+                  style={[
+                    styles.diaTexto,
+                    seleccionado && styles.diaTextoSeleccionado,
+                  ]}
+                >
+                  {dia.charAt(0).toUpperCase() + dia.slice(1)}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
         {/* Selector Hora */}
@@ -108,6 +126,7 @@ const HabitModal = ({
           <Text style={styles.selectorTexto}>{formatTime(hora)}</Text>
         </TouchableOpacity>
 
+        {/* Picker Hora */}
         <DateTimePickerModal
           isVisible={showTimePicker}
           mode="time"
@@ -155,16 +174,34 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginBottom: 15,
   },
-  pickerContainer: {
+  diasContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 15,
+    justifyContent: "space-between",
+  },
+  diaBoton: {
     borderWidth: 1,
     borderColor: "#aaa",
-    borderRadius: 6,
-    marginBottom: 15,
-    overflow: Platform.OS === "android" ? "hidden" : "visible",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 8,
+    width: "45%",
+    alignItems: "center",
   },
-  picker: {
-    height: 50,
-    width: "100%",
+  diaSeleccionado: {
+    backgroundColor: "#1e90ff",
+    borderColor: "#1e90ff",
+  },
+  diaTexto: {
+    color: "#333",
+    fontSize: 12,
+    flexShrink: 1,
+  },
+  diaTextoSeleccionado: {
+    color: "#fff",
+    fontWeight: "bold",
   },
   selector: {
     borderWidth: 1,

@@ -137,9 +137,7 @@ const HabitsScreen = () => {
 
   const formatDiasSemana = (dias?: string[]) => {
     if (!dias || dias.length === 0) return "";
-    return dias
-      .map((d) => d.charAt(0).toUpperCase() + d.slice(1))
-      .join(", ");
+    return dias.map((d) => d.charAt(0).toUpperCase() + d.slice(1)).join(", ");
   };
 
   const formatTime = (dateString?: string) => {
@@ -161,7 +159,9 @@ const HabitsScreen = () => {
               <Text style={styles.nombre}>{item.nombre}</Text>
               {(item.diasSemana?.length || item.hora) && (
                 <Text style={{ fontSize: 12, color: "#666" }}>
-                  {item.diasSemana ? `Días: ${formatDiasSemana(item.diasSemana)} ` : ""}
+                  {item.diasSemana
+                    ? `Días: ${formatDiasSemana(item.diasSemana)} `
+                    : ""}
                   {item.hora ? `Hora: ${formatTime(item.hora)}` : ""}
                 </Text>
               )}
@@ -170,7 +170,9 @@ const HabitsScreen = () => {
               <TouchableOpacity onPress={() => abrirModal(item)}>
                 <Icon name="edit" size={22} color="#1e90ff" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => confirmarEliminarHabito(item.id)}>
+              <TouchableOpacity
+                onPress={() => confirmarEliminarHabito(item.id)}
+              >
                 <Icon name="delete" size={22} color="#ff3333" />
               </TouchableOpacity>
             </View>
@@ -178,7 +180,10 @@ const HabitsScreen = () => {
         )}
       />
 
-      <TouchableOpacity style={styles.botonAgregar} onPress={() => abrirModal()}>
+      <TouchableOpacity
+        style={styles.botonAgregar}
+        onPress={() => abrirModal()}
+      >
         <Feather name="plus" size={28} color="#fff" />
       </TouchableOpacity>
 
@@ -204,13 +209,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingBottom: 80,
+    paddingBottom: 100,
+    paddingTop: 80,
     backgroundColor: "#fff",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
+    backgroundColor: "#0F529AFF",
   },
   item: {
     backgroundColor: "#f0f0f0",
